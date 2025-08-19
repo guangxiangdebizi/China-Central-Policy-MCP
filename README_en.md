@@ -116,6 +116,20 @@ npx supergateway --stdio "node build/index.js" --port 3100
 
 - Official portal: https://www.gov.cn/zhengce/zuixin/
 
+## Legal Notice & Use Restrictions
+
+- Author's intent: This project is provided solely for learning, teaching, and academic research. The open-sourcing purpose is to help analysts and researchers conduct policy analysis more efficiently and reproducibly.
+- Scope of use: This project is not intended for production or commercial deployment. The author does not endorse or warrant such usage. If you plan to use it in production/commercial settings, you must perform your own compliance review and testing and bear all risks and responsibilities.
+- Prohibited uses: You must not use this project for any illegal, infringing, non-compliant, or unethical purposes, including but not limited to:
+  - Bypassing website terms of service, access controls, or anti-scraping measures;
+  - Large-scale scraping, storing, or distributing copyrighted or personal data;
+  - Creating or disseminating false/misleading content or manipulating public opinion;
+  - Any behavior in violation of applicable laws, regulations, data compliance, or privacy requirements.
+- Data source & compliance: This project connects to publicly accessible government portals. Users are responsible for verifying target site terms, robots directives, rate limits, and copyright requirements; use reasonable request rates to avoid undue load on the remote service.
+- Disclaimer: The project is provided "as is" without any express or implied warranties (including merchantability, fitness for a particular purpose, or non-infringement). To the maximum extent permitted by law, the author shall not be liable for any direct or indirect damages arising from the use of this project.
+- License primacy: This project is licensed under Apache-2.0. The license is the sole governing legal text; this section expresses the author's usage intent and compliance reminders and does not modify the license. In case of interpretation conflicts, the license terms prevail.
+- Compliance and takedown: If you believe this project may raise compliance concerns or you have a legitimate rights claim requesting removal/correction, please contact the author via the channels below.
+
 ## License
 
 Apache-2.0
