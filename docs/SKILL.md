@@ -16,6 +16,7 @@
 
 - `ok` 且空列表：在本次可见范围内没有命中，直接说明日期窗和来源。
 - `partial`：向用户说明已选数、已读数、失败项及覆盖范围；需要更多时用游标继续搜索。
+- 简报按 `limit` 选取最多 5 篇，内部最多扫描 12 页；`selection_complete=true` 且选中文件全部读取成功时返回 `ok`。搜索还有更多结果时，覆盖范围和游标保留在 `coverage.search`、`search_next_cursor`，不表示已穷尽主题。
 - `error`：显示明确原因；只在 `retryable=true` 时重试，参数错误先修参数。
 - 全文续页保持 URL、focus、max_chars；游标失效则重新读取，不把不同 body_hash 的段落拼接。
 - 引用时使用 `citations[].quote` 原文，保留条件和期限；段号不改造成网页锚点。

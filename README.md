@@ -17,21 +17,20 @@ npm start
 ```
 
 默认使用 stdio。启动后等待 MCP 客户端输入，不向 stdout 写日志。
-2026-11-23 现场核对 npm 与[官方 SDK README](https://github.com/modelcontextprotocol/typescript-sdk)：使用稳定 v2 拆包，`@modelcontextprotocol/server@2.4.0`、`@modelcontextprotocol/node@2.1.2`，测试客户端 `@modelcontextprotocol/client@2.4.0`。锁文件固定实际依赖。
 
 ### stdio 客户端配置
 
-将 `D:/Business/kuku-upgrade/China-Central-Policy-MCP` 替换为安装目录的绝对路径。
+将配置中的 `/path/to/China-Central-Policy-MCP` 替换为安装目录的绝对路径；下方 HTTP 配置和示例 JSON 使用相同占位。
 
 ```json
 {
   "mcpServers": {
     "central-policy": {
       "command": "node",
-      "args": ["D:/Business/kuku-upgrade/China-Central-Policy-MCP/build/index.js"],
+      "args": ["/path/to/China-Central-Policy-MCP/build/index.js"],
       "env": {
         "MCP_TRANSPORT": "stdio",
-        "OUTPUT_DIR": "D:/Business/kuku-upgrade/China-Central-Policy-MCP/output"
+        "OUTPUT_DIR": "/path/to/China-Central-Policy-MCP/output"
       }
     }
   }
@@ -44,7 +43,7 @@ npm start
 $env:MCP_TRANSPORT="http"
 $env:HOST="127.0.0.1"
 $env:PORT="3100"
-$env:OUTPUT_DIR="D:/Business/kuku-upgrade/China-Central-Policy-MCP/output"
+$env:OUTPUT_DIR="/path/to/China-Central-Policy-MCP/output"
 $env:PUBLIC_BASE_URL="http://127.0.0.1:3100"
 npm start
 ```
@@ -66,15 +65,23 @@ npm start
 
 以下输出于 2026-11-23 通过真实 MCP Client 在线生成，可用 `npm run examples` 刷新完整样例。
 
-### 1. 查本周新政策
+### 1. 最新 5 条政策
 
-用户输入：“列出本周中央新政策，按发布日期筛选。”
+用户输入：“列出最新 5 条中央政策，给出机关、文号和发布日期。”
 
 ```json
-{"tool":"search_policies","arguments":{"from":"2026-11-23","to":"2026-11-23","limit":5}}
+{"tool":"search_policies","arguments":{"limit":5}}
 ```
 
-实际返回：`status=ok`，0 条。本周窗口内官方最新栏目未返回文件；当次栏目最新可见日为 **2026-11-15**。空结果保留原样，不补入上周文件或机构首页。[完整输出](docs/this-week.json)
+实际返回 5 条，不传日期窗。逐篇调用 `get_policy_fulltext` 读取信息表，前三条如下；信息表未提供的字段保留空值。
+
+| 标题及官方链接 | 发文机关 | 文号 | 发布日期 |
+|---|---|---|---|
+| [中共中央印发《中国共产党地方委员会工作条例》](https://www.gov.cn/zhengce/202611/content_7086080.htm) | 未提供 | 未提供 | 2026-11-15 |
+| [基金会管理条例](https://www.gov.cn/zhengce/content/202611/content_7085661.htm) | 国务院 | 国令第848号 | 2026-11-10 |
+| [中医药传统知识保护条例](https://www.gov.cn/zhengce/content/202611/content_7085591.htm) | 国务院 | 国令第850号 | 2026-11-09 |
+
+目录搜索返回 `partial` 和续查游标，表示还有后续条目；这 5 条已成功返回。[全部 5 条及原件信息](docs/latest-five.json)
 
 ### 2. 按文号读全文
 
@@ -101,16 +108,16 @@ npm start
 用户输入：“整理人工智能近 30 天的政策材料，保留原文和出处。”
 
 ```json
-{"tool":"policy_brief","arguments":{"kind":"weekly","query":"人工智能","from":"2026-10-25","to":"2026-11-23","limit":3}}
+{"tool":"policy_brief","arguments":{"kind":"weekly","query":"人工智能","from":"2026-10-25","to":"2026-11-23","limit":5}}
 ```
 
-实际读取 3 篇、失败 0 篇，`status=partial`，因为仍有尚未扫描或交付的检索结果。材料包括：
+一次调用选取并读取 5 篇、失败 0 篇，`status=ok`，`coverage.selection_complete=true`。材料包括：
 
 - 广电总局、民政部老年人广电视听公共文化服务通知，发布 2026-11-17。
 - 2026 年世界互联网大会乌镇峰会主旨演讲的公报原件，发布 2026-11-20。
 - 商务部等 9 部门再生资源回收体系建设意见，发布 2026-11-17。
 
-每篇包含信息表、匹配“人工智能”的完整原段和引用卡。输出为 Markdown 与 JSON 文件，服务端不撰写总结。[阅读简报](docs/ai-30-days.md) · [机器可读结果](docs/ai-30-days.json)
+每篇包含信息表；匹配“人工智能”的完整原段附引用卡，未命中原词的文件标明“本次未定位”。输出为 Markdown 与 JSON 文件，服务端不撰写总结。[阅读简报](docs/ai-30-days.md) · [机器可读结果](docs/ai-30-days.json)
 
 ## 工具
 
@@ -127,7 +134,7 @@ npm start
 
 全文以信息表和 `#UCAP-CONTENT` 为准，不从全页猜机关。段号在同一 `body_hash` 内稳定；引用卡包含机关、题名、文号、发布日期、URL、原段及哈希。`max_chars` 是完整段落分页预算，单个超长段会完整返回并提示。附件仅返回链接。
 
-简报最多读 5 篇，30 秒总时限，每篇最多选 3 个匹配焦点原词的完整段落。找不到则写“本次未定位”，不生成要点。课堂和备考模板只生成信息表问答和原文问答。`compare` 需正好两篇不同文件并指定 `focus`；Markdown 使用纵向分栏，不依赖宽表。
+简报最多读 5 篇，45 秒网络总时限；内部检索最多扫描 12 页、用时最多 25 秒，正文并发读取且每主机并发不超过 2。每篇最多选 3 个匹配焦点原词的完整段落。找不到则写“本次未定位”，不生成要点。课堂和备考模板只生成信息表问答和原文问答。`compare` 需正好两篇不同文件并指定 `focus`；Markdown 使用纵向分栏，不依赖宽表。
 
 ### 返回与续查
 
@@ -146,9 +153,13 @@ npm start
 
 搜索和全文使用 `next_cursor`，翻页保留原参数。游标为有界内存快照，10 分钟有效，绑定查询或正文哈希。重启或换实例后重查；多副本使用网关黏性路由。搜索每次最多读 3 个上游页，每页每栏 10 条，累计最多 30 页，按各栏排名轮取并去重；不把 `ptime` 当发布日期。简报的 `coverage.search_next_cursor` 可交给同参数的 `search_policies` 继续查找。
 
+简报按 `limit` 限定选取范围：达到篇数上限，或检索已完整结束时，`selection_complete=true`；选中文件全部读取成功即为 `ok`。未完成选取或部分正文失败仍为 `partial`。搜索是否还有更多结果单列在 `coverage.search` 和 `search_next_cursor`，不将篇数受限的简报标为主题全集。
+
 旧两个工具的首个 text 块保留 JSON 及旧字段；第二块为人类可读摘要。旧 `date` 明确表示发布日期。
 
 ## 库库平台部署
+
+SDK：稳定 v2 拆包 `@modelcontextprotocol/server@2.4.0`、`@modelcontextprotocol/node@2.1.2`，测试客户端 `@modelcontextprotocol/client@2.4.0`；依赖由锁文件固定。
 
 | 环境变量 | 默认值 | 用途 |
 |---|---|---|

@@ -1,6 +1,7 @@
 {
-  "captured_at": "2026-11-23T07:46:53.507Z",
+  "captured_at": "2026-11-23T08:01:26.087Z",
   "request": {
+    "kind": "classroom",
     "policy_ids": [
       "https://www.gov.cn/zhengce/zhengceku/202507/content_7031216.htm"
     ],
@@ -76,30 +77,31 @@
         "selected": 1,
         "read": 1,
         "failed": [],
+        "selection_complete": true,
         "truncated": false,
         "search": null,
         "search_next_cursor": null,
         "notes": []
       },
-      "generated_at": "2026-11-23T07:46:53.292Z",
+      "generated_at": "2026-11-23T08:01:25.977Z",
       "files": [
         {
-          "path": "D:\\Business\\kuku-upgrade\\China-Central-Policy-MCP\\output\\7ab38228-069e-4d49-b5a5-0960f39d32e5\\policy-brief.md",
+          "path": "/path/to/China-Central-Policy-MCP/output/c1dec204-c9b7-426b-8f2e-196e78c25472/policy-brief.md",
           "downloadUrl": null,
           "bytes": 2340,
           "sha256": "cefd334c80c7bb1e3333e23a5ae9a3f56f08b49331eb6491ae6b8f1cbb481ee3",
           "format": "markdown"
         },
         {
-          "path": "D:\\Business\\kuku-upgrade\\China-Central-Policy-MCP\\output\\7ab38228-069e-4d49-b5a5-0960f39d32e5\\policy-brief.json",
+          "path": "/path/to/China-Central-Policy-MCP/output/c1dec204-c9b7-426b-8f2e-196e78c25472/policy-brief.json",
           "downloadUrl": null,
-          "bytes": 6092,
-          "sha256": "16fce3416713983b509e77d442895ed5ea7686136ed488d7a52be85fbc3430c9",
+          "bytes": 6124,
+          "sha256": "ce4542e9cbb084ce1903f2283979c4bfa7b79bca38ecf9345df5dbf28b4e0fc4",
           "format": "json"
         }
       ]
     },
     "warnings": [],
-    "fetched_at": "2026-11-23T07:46:53.501Z"
+    "fetched_at": "2026-11-23T08:01:26.025Z"
   }
 }

@@ -17,21 +17,20 @@ npm start
 ```
 
 The default transport is stdio. The process waits for MCP input and keeps logs off stdout.
-Verified against npm and the [official SDK README](https://github.com/modelcontextprotocol/typescript-sdk) on 2026-11-23: stable v2 packages `@modelcontextprotocol/server@2.4.0`, `@modelcontextprotocol/node@2.1.2`, and test client `@modelcontextprotocol/client@2.4.0`. Dependencies are locked.
 
 ### stdio configuration
 
-Replace the absolute installation/output paths below.
+Replace `/path/to/China-Central-Policy-MCP` with your absolute installation directory in both configurations and the example JSON files.
 
 ```json
 {
   "mcpServers": {
     "central-policy": {
       "command": "node",
-      "args": ["D:/Business/kuku-upgrade/China-Central-Policy-MCP/build/index.js"],
+      "args": ["/path/to/China-Central-Policy-MCP/build/index.js"],
       "env": {
         "MCP_TRANSPORT": "stdio",
-        "OUTPUT_DIR": "D:/Business/kuku-upgrade/China-Central-Policy-MCP/output"
+        "OUTPUT_DIR": "/path/to/China-Central-Policy-MCP/output"
       }
     }
   }
@@ -44,7 +43,7 @@ Replace the absolute installation/output paths below.
 $env:MCP_TRANSPORT="http"
 $env:HOST="127.0.0.1"
 $env:PORT="3100"
-$env:OUTPUT_DIR="D:/Business/kuku-upgrade/China-Central-Policy-MCP/output"
+$env:OUTPUT_DIR="/path/to/China-Central-Policy-MCP/output"
 $env:PUBLIC_BASE_URL="http://127.0.0.1:3100"
 npm start
 ```
@@ -66,9 +65,16 @@ The native stateless SDK handler at `/mcp` also supports 2025 clients. No superg
 
 Captured on 2026-11-23 through a real MCP Client. `npm run examples` refreshes the samples. Policy quotations remain in their original Chinese; this README does not present them as official translations.
 
-1. **This week's new policies.** `search_policies({from:"2026-11-23",to:"2026-11-23",limit:5})` returned `ok`, zero items. The latest visible feed date was 2026-11-15. [Raw output](docs/this-week.json).
+1. **Latest five policies.** `search_policies({limit:5})` returned five entries without a date window. Each original was then read with `get_policy_fulltext` for metadata. The first three are below; missing information-table fields remain null. Search returns `partial` with a cursor because further feed entries remain. [All five entries and original metadata](docs/latest-five.json).
+
+| Original title and official link | Issuer | Document number | Published |
+|---|---|---|---|
+| [中共中央印发《中国共产党地方委员会工作条例》](https://www.gov.cn/zhengce/202611/content_7086080.htm) | Not provided | Not provided | 2026-11-15 |
+| [基金会管理条例](https://www.gov.cn/zhengce/content/202611/content_7085661.htm) | 国务院 | 国令第848号 | 2026-11-10 |
+| [中医药传统知识保护条例](https://www.gov.cn/zhengce/content/202611/content_7085591.htm) | 国务院 | 国令第850号 | 2026-11-09 |
+
 2. **Read a policy by document number.** Search `国办发〔2025〕25号` with `mode:"doc_no"`, then pass its URL to `get_policy_fulltext`. The issuer is **国务院办公厅**; issued **2025-07-03**, published **2025-07-09**, 34 paragraphs. Paragraph `p0008` preserves the reserve-fund condition, 90%/50% rates, and the December 2025 deadline together. [Official original](https://www.gov.cn/zhengce/zhengceku/202507/content_7031216.htm), [full text and citations](docs/by-document-number.json), [classroom card](docs/classroom.md).
-3. **AI policies over 30 days.** `policy_brief({kind:"weekly",query:"人工智能",from:"2026-10-25",to:"2026-11-23",limit:3})` read three sources with no failures. It returned `partial` because more search results remain. The sources cover elderly broadcasting services (November 17), a World Internet Conference speech in the official gazette (November 20), and recycling systems (November 17). [Markdown](docs/ai-30-days.md), [JSON](docs/ai-30-days.json).
+3. **AI policies over 30 days.** `policy_brief({kind:"weekly",query:"人工智能",from:"2026-10-25",to:"2026-11-23",limit:5})` selected and read five sources in one call, with no failures: `status=ok`, `coverage.selection_complete=true`. Sources include elderly broadcasting services (November 17), a World Internet Conference speech in the official gazette (November 20), and recycling systems (November 17). Sources without an exact-focus paragraph are labeled accordingly. [Markdown](docs/ai-30-days.md), [JSON](docs/ai-30-days.json).
 
 ## Tools
 
@@ -85,7 +91,7 @@ Dates are inclusive **publication dates in Beijing time**, not issue dates. `iss
 
 Full text comes from the information table and `#UCAP-CONTENT`. Unknown issuers remain null. Citations contain the issuer, title, document number, publication date, original URL, complete quoted paragraph, paragraph ID and body hash. Paragraph IDs are tool locators, not website anchors. Pagination never cuts a condition or deadline inside a paragraph; one long paragraph can exceed `max_chars` with a warning.
 
-Briefs read up to five documents within 30 seconds and select up to three exact-focus paragraphs per document. No matching paragraph means no invented point. Classroom/exam questions use metadata and quoted text. Comparisons require two distinct policies and a focus; their Markdown uses vertical sections suitable for narrow screens. The server does not call an LLM or write summaries.
+Briefs read up to five documents with a 45-second network budget. Internal search scans at most twelve pages within 25 seconds; originals are read concurrently with at most two requests per host. Each source supplies up to three exact-focus paragraphs. No matching paragraph means no invented point. Classroom/exam questions use metadata and quoted text. Comparisons require two distinct policies and a focus; their Markdown uses vertical sections suitable for narrow screens. The server does not call an LLM or write summaries.
 
 ## Output and pagination
 
@@ -93,9 +99,13 @@ Each tool advertises `outputSchema` and returns `structuredContent` with `status
 
 For search/full-text pagination, keep the same arguments and pass `next_cursor`. Opaque cursors expire after ten minutes and bind to the query/body hash. Restarting loses cursors; multiple replicas need sticky routing. A search call fetches at most three upstream pages, ten entries per catalog per page, with a thirty-page cumulative cap. Results are interleaved by catalog rank, then deduplicated. Coverage includes scanned pages, totals, unknown dates and truncation. A brief exposes `coverage.search_next_cursor` for continuation with `search_policies` using its original search arguments.
 
+For a brief, `selection_complete=true` means the requested `limit` was reached or search finished without coverage gaps. Reading every selected source successfully produces `ok`; incomplete selection or failed originals still produces `partial`. Search coverage and remaining results are reported separately in `coverage.search` and `search_next_cursor`. A capped brief does not claim exhaustive topic coverage.
+
 The two legacy tools retain JSON as their first text block and a readable summary as the second. Their `date` field means publication date.
 
 ## Platform deployment
+
+SDK: stable v2 packages `@modelcontextprotocol/server@2.4.0`, `@modelcontextprotocol/node@2.1.2`, and test client `@modelcontextprotocol/client@2.4.0`; dependencies are locked.
 
 | Environment variable | Default | Purpose |
 |---|---|---|
