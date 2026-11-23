@@ -1,14 +1,15 @@
 {
   "name": "central-policy-mcp",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "MCP service for accessing and analyzing central government policies from China",
   "main": "build/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "node scripts/build.mjs",
     "start": "node build/index.js",
     "dev": "tsc --watch",
-    "sse": "npx supergateway --stdio \"node build/index.js\" --port 3100"
+    "test": "npm run build && node --test --test-concurrency=1 tests/*.test.mjs",
+    "examples": "npm run build && node scripts/examples.mjs"
   },
   "keywords": ["mcp", "policy", "government", "china", "analysis"],
   "author": {
@@ -18,21 +19,22 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "0.6.0",
-    "cheerio": "^1.0.0-rc.12",
-    "axios": "^1.6.7"
+    "@modelcontextprotocol/server": "2.4.0",
+    "@modelcontextprotocol/node": "2.1.2",
+    "cheerio": "1.1.2",
+    "zod": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
-    "@types/cheerio": "^0.22.35",
+    "@modelcontextprotocol/client": "2.4.0",
     "typescript": "^5.3.3"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/guangxiangdebizi/central-policy-mcp.git"
+    "url": "https://github.com/guangxiangdebizi/China-Central-Policy-MCP.git"
   },
-  "homepage": "https://github.com/guangxiangdebizi/central-policy-mcp#readme",
+  "homepage": "https://github.com/guangxiangdebizi/China-Central-Policy-MCP#readme",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.18.1"
   }
 }
