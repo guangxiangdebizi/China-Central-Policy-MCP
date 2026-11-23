@@ -1,0 +1,37 @@
+{
+  "captured_at": "2026-11-23T07:46:53.502Z",
+  "request": {
+    "from": "2026-11-23",
+    "to": "2026-11-23",
+    "limit": 5
+  },
+  "response": {
+    "status": "ok",
+    "data": {
+      "items": [],
+      "returned": 0,
+      "source": "gov_cn_latest_json",
+      "date_basis": "published_on / Asia/Shanghai (UTC+08:00)",
+      "coverage": {
+        "catalogs": [
+          "latest"
+        ],
+        "pages_scanned": 1,
+        "upstream_totals": {},
+        "scanned": 1117,
+        "unknown_dates": 0,
+        "window_start": "2020-01-05",
+        "window_end": "2026-11-15",
+        "truncated": false,
+        "notes": [
+          "仅代表官方最新栏目 JSON 的可见范围。"
+        ]
+      },
+      "next_cursor": null
+    },
+    "warnings": [
+      "仅代表官方最新栏目 JSON 的可见范围。"
+    ],
+    "fetched_at": "2026-11-23T07:46:48.035Z"
+  }
+}

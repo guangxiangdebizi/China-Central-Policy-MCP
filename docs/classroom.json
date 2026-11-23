@@ -1,0 +1,105 @@
+{
+  "captured_at": "2026-11-23T07:46:53.507Z",
+  "request": {
+    "policy_ids": [
+      "https://www.gov.cn/zhengce/zhengceku/202507/content_7031216.htm"
+    ],
+    "focus": "稳岗返还"
+  },
+  "response": {
+    "status": "ok",
+    "data": {
+      "markdown": "# 政策课堂卡\n\n文件：指定原件\n\n## 文件清单\n\n1. [国务院办公厅关于进一步加大稳就业政策支持力度的通知](https://www.gov.cn/zhengce/zhengceku/202507/content_7031216.htm)\n\n## 国务院办公厅关于进一步加大稳就业政策支持力度的通知\n\n- 发文机关：国务院办公厅\n- 文号：国办发〔2025〕25号\n- 成文：2025-07-03｜发布：2025-07-09\n[中国政府网原件](https://www.gov.cn/zhengce/zhengceku/202507/content_7031216.htm)\n\n### 关键段落原文\n\n> （二）加大失业保险稳岗返还政策力度。上年末失业保险基金滚存结余备付期限在1年以上的统筹地区，可对相关企业提高失业保险稳岗返还比例，其中中小微企业返还比例由不超过企业及其职工上年度实际缴纳失业保险费的60%最高提至不超过90%，大型企业返还比例由不超过30%最高提至不超过50%，政策执行期限至2025年12月底。\n\n引用：b3a0faaeea73:d2627b476308:p0008\n\n**文件由谁发布？**\n\n国务院办公厅\n\n出处：[原件信息表](https://www.gov.cn/zhengce/zhengceku/202507/content_7031216.htm)\n\n**文件何时成文、何时发布？**\n\n成文：2025-07-03；发布：2025-07-09。\n\n出处：[原件信息表](https://www.gov.cn/zhengce/zhengceku/202507/content_7031216.htm)\n\n**文件对“稳岗返还”怎样规定？请保留条件和期限。**\n\n（二）加大失业保险稳岗返还政策力度。上年末失业保险基金滚存结余备付期限在1年以上的统筹地区，可对相关企业提高失业保险稳岗返还比例，其中中小微企业返还比例由不超过企业及其职工上年度实际缴纳失业保险费的60%最高提至不超过90%，大型企业返还比例由不超过30%最高提至不超过50%，政策执行期限至2025年12月底。\n\n出处：b3a0faaeea73:d2627b476308:p0008\n\n## 引用卡\n\n- b3a0faaeea73:d2627b476308:p0008：国务院办公厅，《国务院办公厅关于进一步加大稳就业政策支持力度的通知》，国办发〔2025〕25号，发布 2025-07-09，[原件](https://www.gov.cn/zhengce/zhengceku/202507/content_7031216.htm)，段号 p0008，正文 SHA-256：d2627b4763083cb5aab643008544ae05f89c0e10e5015e6e71e577148707806e。\n\n段号是本工具定位符，不是网页锚点。\n\n已选 1 篇，已读 1 篇，失败 0 篇。\n",
+      "kind": "classroom",
+      "topic": null,
+      "from": null,
+      "to": null,
+      "cards": [
+        {
+          "title": "国务院办公厅关于进一步加大稳就业政策支持力度的通知",
+          "document": {
+            "policy_id": "https://www.gov.cn/zhengce/zhengceku/202507/content_7031216.htm",
+            "title": "国务院办公厅关于进一步加大稳就业政策支持力度的通知",
+            "url": "https://www.gov.cn/zhengce/zhengceku/202507/content_7031216.htm",
+            "issuer": "国务院办公厅",
+            "doc_no": "国办发〔2025〕25号",
+            "issued_on": "2025-07-03",
+            "published_on": "2025-07-09",
+            "body_hash": "d2627b4763083cb5aab643008544ae05f89c0e10e5015e6e71e577148707806e"
+          },
+          "facts": [
+            {
+              "text": "（二）加大失业保险稳岗返还政策力度。上年末失业保险基金滚存结余备付期限在1年以上的统筹地区，可对相关企业提高失业保险稳岗返还比例，其中中小微企业返还比例由不超过企业及其职工上年度实际缴纳失业保险费的60%最高提至不超过90%，大型企业返还比例由不超过30%最高提至不超过50%，政策执行期限至2025年12月底。",
+              "citation_ids": [
+                "b3a0faaeea73:d2627b476308:p0008"
+              ]
+            }
+          ],
+          "qa": [
+            {
+              "question": "文件由谁发布？",
+              "answer": "国务院办公厅",
+              "citation_ids": []
+            },
+            {
+              "question": "文件何时成文、何时发布？",
+              "answer": "成文：2025-07-03；发布：2025-07-09。",
+              "citation_ids": []
+            },
+            {
+              "question": "文件对“稳岗返还”怎样规定？请保留条件和期限。",
+              "answer": "（二）加大失业保险稳岗返还政策力度。上年末失业保险基金滚存结余备付期限在1年以上的统筹地区，可对相关企业提高失业保险稳岗返还比例，其中中小微企业返还比例由不超过企业及其职工上年度实际缴纳失业保险费的60%最高提至不超过90%，大型企业返还比例由不超过30%最高提至不超过50%，政策执行期限至2025年12月底。",
+              "citation_ids": [
+                "b3a0faaeea73:d2627b476308:p0008"
+              ]
+            }
+          ]
+        }
+      ],
+      "citations": [
+        {
+          "policy_id": "https://www.gov.cn/zhengce/zhengceku/202507/content_7031216.htm",
+          "title": "国务院办公厅关于进一步加大稳就业政策支持力度的通知",
+          "url": "https://www.gov.cn/zhengce/zhengceku/202507/content_7031216.htm",
+          "issuer": "国务院办公厅",
+          "doc_no": "国办发〔2025〕25号",
+          "issued_on": "2025-07-03",
+          "published_on": "2025-07-09",
+          "body_hash": "d2627b4763083cb5aab643008544ae05f89c0e10e5015e6e71e577148707806e",
+          "id": "b3a0faaeea73:d2627b476308:p0008",
+          "paragraph_id": "p0008",
+          "quote": "（二）加大失业保险稳岗返还政策力度。上年末失业保险基金滚存结余备付期限在1年以上的统筹地区，可对相关企业提高失业保险稳岗返还比例，其中中小微企业返还比例由不超过企业及其职工上年度实际缴纳失业保险费的60%最高提至不超过90%，大型企业返还比例由不超过30%最高提至不超过50%，政策执行期限至2025年12月底。",
+          "locator_note": "段号为本工具在该正文哈希内的定位符，不是网页锚点。"
+        }
+      ],
+      "coverage": {
+        "selected": 1,
+        "read": 1,
+        "failed": [],
+        "truncated": false,
+        "search": null,
+        "search_next_cursor": null,
+        "notes": []
+      },
+      "generated_at": "2026-11-23T07:46:53.292Z",
+      "files": [
+        {
+          "path": "D:\\Business\\kuku-upgrade\\China-Central-Policy-MCP\\output\\7ab38228-069e-4d49-b5a5-0960f39d32e5\\policy-brief.md",
+          "downloadUrl": null,
+          "bytes": 2340,
+          "sha256": "cefd334c80c7bb1e3333e23a5ae9a3f56f08b49331eb6491ae6b8f1cbb481ee3",
+          "format": "markdown"
+        },
+        {
+          "path": "D:\\Business\\kuku-upgrade\\China-Central-Policy-MCP\\output\\7ab38228-069e-4d49-b5a5-0960f39d32e5\\policy-brief.json",
+          "downloadUrl": null,
+          "bytes": 6092,
+          "sha256": "16fce3416713983b509e77d442895ed5ea7686136ed488d7a52be85fbc3430c9",
+          "format": "json"
+        }
+      ]
+    },
+    "warnings": [],
+    "fetched_at": "2026-11-23T07:46:53.501Z"
+  }
+}
