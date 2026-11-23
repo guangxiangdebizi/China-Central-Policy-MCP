@@ -11,7 +11,13 @@
     "test": "npm run build && node --test --test-concurrency=1 tests/*.test.mjs",
     "examples": "npm run build && node scripts/examples.mjs"
   },
-  "keywords": ["mcp", "policy", "government", "china", "analysis"],
+  "keywords": [
+    "mcp",
+    "policy",
+    "government",
+    "china",
+    "analysis"
+  ],
   "author": {
     "name": "Xingyu Chen",
     "email": "guangxiangdebizi@gmail.com",
@@ -36,5 +42,10 @@
   "homepage": "https://github.com/guangxiangdebizi/China-Central-Policy-MCP#readme",
   "engines": {
     "node": ">=20.18.1"
+  },
+  "overrides": {
+    "cheerio": {
+      "undici": "8.12.2"
+    }
   }
 }
