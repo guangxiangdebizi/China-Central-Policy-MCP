@@ -50,7 +50,7 @@ export function buildServer() {
       const p = await readPolicy(url);
       return { policy_id: p.document.policy_id, items: p.interpretations, reason: p.interpretation_reason };
     }, data => data.items.length ? data.items.map(i => `- ${i.title}\n  ${i.url}`).join('\n') : data.reason ?? '未找到相关解读。');
-  const briefDescription = '按主题和时间窗或指定最多 5 篇政策生成 Markdown + JSON 原文材料及引用卡，不调用模型、不写总结。kind 支持 weekly/classroom/exam/compare，compare 需两篇和 focus；总时限 30 秒。';
+  const briefDescription = '按主题和时间窗或指定最多 5 篇政策生成 Markdown + JSON 原文材料及引用卡，不调用模型、不写总结。kind 支持 weekly/classroom/exam/compare，compare 需两篇和 focus；总时限 45 秒，内部检索最多 12 页。ok 表示已完成 limit 范围内的选取和正文读取，搜索覆盖和续查游标单列。';
   register('policy_brief', briefDescription, schemas.briefInput, schemas.briefData, policyBrief, data => data.markdown, false, true);
   register('build_policy_brief', 'policy_brief 的兼容名称。' + briefDescription, schemas.briefInput, schemas.briefData, policyBrief, data => data.markdown, false, true);
   register('get_latest_policies', '旧版兼容入口。keyword 对应主题检索，startdate/enddate 对应北京时间发布日期；新接入使用 search_policies。',

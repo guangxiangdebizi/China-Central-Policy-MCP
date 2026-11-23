@@ -39,7 +39,7 @@ export const briefData = z.object({ markdown: z.string(), kind: z.string(), topi
     qa: z.array(z.object({ question: z.string(), answer: z.string(), citation_ids: z.array(z.string()) })).optional() })),
   citations: z.array(citationSchema), rows: z.array(z.object({ focus: z.string(), left: z.array(factSchema), right: z.array(factSchema) })).optional(),
   coverage: z.object({ selected: z.int(), read: z.int(), failed: z.array(z.object({ url: z.string(), code: z.string(), reason: z.string() })),
-    truncated: z.boolean(), search: searchCoverage.nullable(), search_next_cursor: nullable, notes: z.array(z.string()) }), generated_at: z.string(), files: z.array(fileSchema) });
+    selection_complete: z.boolean(), truncated: z.boolean(), search: searchCoverage.nullable(), search_next_cursor: nullable, notes: z.array(z.string()) }), generated_at: z.string(), files: z.array(fileSchema) });
 export const interpretationData = z.object({ policy_id: z.string(), items: z.array(linkSchema), reason: nullable });
 export const legacyData = z.object({ source: z.string(), search_method: z.string(), count: z.int(),
   filters: z.object({ startdate: nullable, enddate: nullable, keyword: nullable }),

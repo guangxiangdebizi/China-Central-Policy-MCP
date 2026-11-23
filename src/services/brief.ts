@@ -1,4 +1,4 @@
-import { allowed, checkWindow, deadlineCheck, PolicyError } from '../core.js';
+import { allowed, checkWindow, PolicyError } from '../core.js';
 import { searchPolicies } from '../providers/govcn.js';
 import { briefData, briefInput, searchInput } from '../schemas.js';
 import { citation, focusParagraphs, readPolicy } from './fulltext.js';
@@ -7,7 +7,7 @@ import type * as z from 'zod/v4';
 
 const md = (text: string) => text.replace(/[\\`*_[\]<>]/g, '\\$&');
 export async function policyBrief(input: z.infer<typeof briefInput>): Promise<z.infer<typeof briefData>> {
-  const deadline = Date.now() + 30_000;
+  const deadline = Date.now() + 45_000;
   checkWindow(input.from, input.to);
   if (input.policy_ids ? input.query || input.from || input.to : !input.query || !input.from || !input.to) {
     throw new PolicyError('INVALID_INPUT', '请二选一：query + from + to，或 policy_ids。');
@@ -19,7 +19,8 @@ export async function policyBrief(input: z.infer<typeof briefInput>): Promise<z.
   if (new Set(urls).size !== urls.length) throw new PolicyError('INVALID_INPUT', 'policy_ids 不得包含重复文件。');
   let search: Awaited<ReturnType<typeof searchPolicies>> | undefined;
   if (!input.policy_ids) {
-    search = await searchPolicies(searchInput.parse({ query: input.query, from: input.from, to: input.to, limit: input.limit }), deadline);
+    // Leave twenty seconds for reading the selected originals; ordinary search keeps its three-page budget.
+    search = await searchPolicies(searchInput.parse({ query: input.query, from: input.from, to: input.to, limit: input.limit }), deadline - 20_000, 12);
     urls = search.items.map(i => i.url);
   }
   const cards: z.infer<typeof briefData>['cards'] = [];
@@ -27,10 +28,15 @@ export async function policyBrief(input: z.infer<typeof briefInput>): Promise<z.
   const citations: z.infer<typeof briefData>['citations'] = [];
   const failed: z.infer<typeof briefData>['coverage']['failed'] = [];
   const notes: string[] = [];
-  for (const url of urls.slice(0, 5)) {
+  const selectionComplete = !search || urls.length >= input.limit || !search.coverage.truncated;
+  if (search) notes.push(`本次简报最多选 ${input.limit} 篇，已选 ${urls.length} 篇；${selectionComplete ? '选取完成' : '检索覆盖不足，选取未完成'}。搜索覆盖和续查游标单列，不代表穷尽主题下的全部文件。`);
+  // GovFetcher enforces the shared per-host concurrency and request-start limits.
+  const originals = await Promise.allSettled(urls.slice(0, 5).map(url => readPolicy(url, deadline)));
+  for (const [index, original] of originals.entries()) {
+    const url = urls[index];
     try {
-      deadlineCheck(deadline);
-      const policy = await readPolicy(url, deadline);
+      if (original.status === 'rejected') throw original.reason;
+      const policy = original.value;
       const focus = input.focus ?? input.query;
       const matches = focusParagraphs(policy, focus).filter(p => p.type !== 'heading');
       const selected = (focus ? matches : policy.paragraphs.filter(p => p.type !== 'heading')).slice(0, 3);
@@ -86,8 +92,8 @@ export async function policyBrief(input: z.infer<typeof briefInput>): Promise<z.
   for (const note of [...(search?.coverage.notes ?? []), ...notes]) lines.push(`- ${md(note)}`);
   const markdown = lines.join('\n');
   const data = { markdown, kind: input.kind, topic: input.query ?? null, from: input.from ?? null, to: input.to ?? null,
-    cards, citations, rows, coverage: { selected: urls.length, read: cards.length, failed,
-      truncated: !!search?.coverage.truncated || failed.length > 0, search: search?.coverage ?? null, search_next_cursor: search?.next_cursor ?? null, notes }, generated_at: new Date().toISOString() };
+    cards, citations, rows, coverage: { selected: urls.length, read: cards.length, failed, selection_complete: selectionComplete,
+      truncated: !selectionComplete || failed.length > 0, search: search?.coverage ?? null, search_next_cursor: search?.next_cursor ?? null, notes }, generated_at: new Date().toISOString() };
   const files = await writeBriefFiles(markdown, data);
   return { ...data, files };
 }

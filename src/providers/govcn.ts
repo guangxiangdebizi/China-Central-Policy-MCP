@@ -63,7 +63,7 @@ export function mergeHits(items: PolicyHit[]) {
 type Input = z.infer<typeof searchInput>;
 type State = { items: PolicyHit[]; offset: number; page: number; done: boolean; scanned: number; unknown: number;
   totals: Record<string, number>; days: string[]; historyLimited: boolean };
-export async function searchPolicies(input: Input, deadline = Date.now() + 30_000): Promise<z.infer<typeof searchData>> {
+export async function searchPolicies(input: Input, deadline = Date.now() + 30_000, pageBudget = 3): Promise<z.infer<typeof searchData>> {
   checkWindow(input.from, input.to);
   if (input.mode === 'doc_no' && !input.query) throw new PolicyError('INVALID_INPUT', '文号检索必须提供 query。');
   if (!input.query && input.catalog !== 'all') throw new PolicyError('INVALID_INPUT', '无关键词时仅支持 catalog=all。');
@@ -90,7 +90,7 @@ export async function searchPolicies(input: Input, deadline = Date.now() + 30_00
     state.done = true;
     state.historyLimited = !!input.from && input.from < (state.days.slice().sort()[0] ?? '9999');
   } else if (input.query) {
-    let budget = 3;
+    let budget = pageBudget;
     while (state.items.length - state.offset < input.limit && !state.done && budget-- > 0) {
       const params = new URLSearchParams({ t: 'zhengcelibrary_gw_bm_gb', q: input.mode === 'doc_no' ? docKey(input.query) : input.query,
         searchfield: 'title:content:summary', sort: input.from || input.to ? 'pubtime' : 'score', sortType: '1', p: String(state.page + 1), n: '10', timetype: 'timezd' });
@@ -107,7 +107,7 @@ export async function searchPolicies(input: Input, deadline = Date.now() + 30_00
   state.offset += items.length;
   const more = state.offset < state.items.length || !state.done;
   const truncated = more || state.historyLimited || state.unknown > 0 || (state.page >= 30 && selected.some(c => state.page * 10 < state.totals[c]));
-  const notes = [input.query ? '按栏目原排名轮取；日期窗在北京时间发布日期上本地过滤；最多扫描 30 页，每次调用最多取 3 页。' : '仅代表官方最新栏目 JSON 的可见范围。'];
+  const notes = [input.query ? `按栏目原排名轮取；日期窗在北京时间发布日期上本地过滤；最多扫描 30 页，本次调用最多取 ${pageBudget} 页。` : '仅代表官方最新栏目 JSON 的可见范围。'];
   if (state.historyLimited) notes.push('开始日期早于最新栏目最早可见日，历史覆盖不足。');
   if (state.unknown) notes.push(`${state.unknown} 条发布日期未知；有日期窗时已排除。`);
   if (more) notes.push('仍有未交付或未扫描项目，请保留参数并使用 next_cursor 续查。');
